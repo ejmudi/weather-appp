@@ -19,7 +19,10 @@ export const Loading = ({ isLoadingWeatherItems, fetchWeatherItems }) => {
     }, [isLoadingWeatherItems, history]);
 
     return (
-        <div className='loading-page'>
+        <div className='loading-page' style={{
+            textAlign: 'center',
+            paddingTop: '15%'
+        }}>
             <h2>Loading...</h2>
         </div>
     );

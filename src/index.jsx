@@ -13,7 +13,7 @@ const Routes = () => (
     <Router>
         <Switch>
             <Suspense fallback={<div>Loading...</div>}>
-                <Route exact path={pageurl.LOADING} component={Loading} />
+                <Route path={pageurl.LOADING} component={Loading} />
                 <Route path={pageurl.WEATHERINFO} component={WeatherInfo} />
             </Suspense>
         </Switch>

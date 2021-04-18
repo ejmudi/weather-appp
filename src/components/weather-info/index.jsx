@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,8 +14,6 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from 'recharts';
 import './index.scss';
 
 export const WeatherInfo = ({ weatherItems }) => {
-    const getWeatherItemsByPage = () => weatherItems.slice(pageSize * (pageNum - 1), pageSize * pageNum);
-
     const TemperatureTypeEnum = {
         CELSIUS: '1',
         FAHRENHEIT: '2'
@@ -27,9 +25,13 @@ export const WeatherInfo = ({ weatherItems }) => {
     const [temperatureType, setTemperatureType] = useState(TemperatureTypeEnum.FAHRENHEIT);
     const [selectedWeatherCardKey, setSelectedWeatherCardKey] = useState();
 
+    const getWeatherItemsByPage = () => weatherItems.slice(pageSize * (pageNum - 1), pageSize * pageNum);
+
+    const memoizedGetWeatherItemsByPage = useCallback(getWeatherItemsByPage, [weatherItems, pageNum]);
+
     useEffect(() => {
-        setSelectedWeatherCardKey(getWeatherItemsByPage()[0]?.key);
-    }, [pageNum]);
+        setSelectedWeatherCardKey(memoizedGetWeatherItemsByPage()[0]?.key);
+    }, [memoizedGetWeatherItemsByPage]);
 
     const getTemperature = temperature => {
         const getCelsiusTemp = fahrenheitTemp => (fahrenheitTemp - 32) * (5 / 9);
@@ -82,9 +84,9 @@ export const WeatherInfo = ({ weatherItems }) => {
                 data-testid={`${isInView ? 'visible-card' : 'hidden-card'}`}
                 onClick={onClick}>
                 <CardContent>
-                    <Typography variant="h6">Temp:</Typography>
+                    <Typography variant="body1">Temp:</Typography>
                     <Typography variant="body2" color="textSecondary" className='temp-value-text'>{renderTemperature(averageTemp)}</Typography>
-                    <Typography variant="h6">Date:</Typography>
+                    <Typography variant="body1">Date:</Typography>
                     <Typography variant="body2" color="textSecondary">{date}</Typography>
                 </CardContent>
             </Card>
@@ -93,7 +95,7 @@ export const WeatherInfo = ({ weatherItems }) => {
 
     const selectedWeatherCard = getWeatherItemsByPage().find(x => x.key === selectedWeatherCardKey);
     const weatherCardSegments = selectedWeatherCard?.segments?.map(x => ({
-        label: `${getTemperature(x.temperature).toFixed(2)}${temperatureType === TemperatureTypeEnum.FAHRENHEIT ? 'F' : 'C'}`,
+        label: `${getTemperature(x.temperature).toFixed(2)}${temperatureType === TemperatureTypeEnum.FAHRENHEIT ? '°F' : '°C'}`,
         temp: getTemperature(x.temperature),
         segment: x.time
     }));
@@ -170,7 +172,7 @@ export const WeatherInfo = ({ weatherItems }) => {
                 <ResponsiveContainer width={isDesktop ? '70%' : '100%'} height={250}>
                     <BarChart width='100%' height='100%' data={weatherCardSegments}>
                         <XAxis dataKey="label" />
-                        <Tooltip content={<CustomTooltip />} />
+                        <Tooltip cursor={{fill: '#b1dbfd'}} content={<CustomTooltip />} />
                         <Bar dataKey="temp" fill="#2196f3" />
                     </BarChart>
                 </ResponsiveContainer>

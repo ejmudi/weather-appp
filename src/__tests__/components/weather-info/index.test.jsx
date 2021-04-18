@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
+import { within } from '@testing-library/dom'
 import { WeatherInfo } from '../../../components/weather-info';
 
 describe('Weather Info Page', () => {
@@ -215,5 +216,25 @@ describe('Weather Info Page', () => {
     it('should show 3 weather items on page load', () => {
         const weatherCards = screen.queryAllByTestId('visible-card');
         expect(weatherCards.length).toBe(3);
+    });
+
+    it('should should change the temperature to Celcius when Celcius radio button is clicked', () => {
+        const celsiusRadioButton = screen.getByText('Celsius');
+        fireEvent.click(celsiusRadioButton);
+
+        const weatherCards = screen.getAllByTestId('visible-card');
+        const firstCardElement = within(weatherCards[0]).getByText('134.99°C');
+
+        expect(firstCardElement).toBeTruthy();
+    });
+
+    it('should show next weather items correctly on click of next button', () => {
+        const next = screen.getByTestId('next-icon');
+        fireEvent.click(next);
+
+        const weatherCards = screen.getAllByTestId('visible-card');
+        const nineTeenthAprCardElement = within(weatherCards[0]).getByText('19 Apr 21');
+
+        expect(nineTeenthAprCardElement).toBeTruthy();
     });
 });

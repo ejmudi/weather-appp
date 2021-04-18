@@ -8,10 +8,15 @@ Demo can be found here: [https://ejmudi.github.io/weather-appp/](https://ejmudi.
 
 ## Usage
 ```
-npm install
+yarn
 ```
 
 ```
-npm start
+yarn start
+```
+
+## Test
+```
+yarn test
 ```
 
