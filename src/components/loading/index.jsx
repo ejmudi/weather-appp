@@ -20,7 +20,7 @@ export const Loading = ({ isLoadingWeatherItems, fetchWeatherItems }) => {
 
     return (
         <div className='loading-page'>
-            Loading
+            <h2>Loading...</h2>
         </div>
     );
 };

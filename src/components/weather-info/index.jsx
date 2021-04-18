@@ -3,47 +3,15 @@ import { blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import { selectWeatherItems } from '../../selectors';
 import { connect } from 'react-redux';
-import { BarChart, Bar, XAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from 'recharts';
 import './index.scss';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        minWidth: 275,
-        flexGrow: 1
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-    paper: {
-        padding: theme.spacing(4),
-        textAlign: 'center',
-        color: theme.palette.text.primary,
-    },
-    radioColor: {
-        color: blue[400],
-        '&$checked': {
-            color: blue[600],
-        },
-    },
-    selectedCard: {
-        backgroundColor: 'red'
-    }
-}));
 
 export const WeatherInfo = ({ weatherItems }) => {
     const getWeatherItemsByPage = () => weatherItems.slice(pageSize * (pageNum - 1), pageSize * pageNum);
@@ -54,8 +22,6 @@ export const WeatherInfo = ({ weatherItems }) => {
     };
     Object.freeze(TemperatureTypeEnum);
     const pageSize = 3;
-
-    const classes = useStyles();
 
     const [pageNum, setPageNum] = useState(1);
     const [temperatureType, setTemperatureType] = useState(TemperatureTypeEnum.FAHRENHEIT);
@@ -146,6 +112,7 @@ export const WeatherInfo = ({ weatherItems }) => {
     };
 
     const itemsInView = getWeatherItemsByPage();
+    const isDesktop = window.innerWidth >= 1024;
 
     return (
         <div className='weather-info-page'>
@@ -200,11 +167,13 @@ export const WeatherInfo = ({ weatherItems }) => {
                 </div>
             </div>
             <div className='bar-chart-wrapper'>
-                <BarChart width={730} height={250} data={weatherCardSegments}>
-                    <XAxis dataKey="label" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="temp" fill="#2196f3" />
-                </BarChart>
+                <ResponsiveContainer width={isDesktop ? '70%' : '100%'} height={250}>
+                    <BarChart width='100%' height='100%' data={weatherCardSegments}>
+                        <XAxis dataKey="label" />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="temp" fill="#2196f3" />
+                    </BarChart>
+                </ResponsiveContainer>
             </div>
         </div>
     );
