@@ -110,16 +110,18 @@ export const WeatherInfo = ({ weatherItems }) => {
 
     const WeatherCard = ({ date, averageTemp, isSelected, isInView, onClick }) => {
         return (
-            <div className='weather-card' data-testid={`${isInView ? 'visible-card' : 'hidden-card'}`}>
-                <Card className={isSelected ? classes.selectedCard : classes.root} variant='outlined' onClick={onClick}>
-                    <CardContent>
-                        <Typography variant="h6">Temp:</Typography>
-                        <Typography variant="body2">{renderTemperature(averageTemp)}</Typography>
-                        <Typography variant="h6">Date:</Typography>
-                        <Typography variant="body2">{date}</Typography>
-                    </CardContent>
-                </Card>
-            </div>
+            <Card
+                variant='outlined'
+                className={`weather-card${isSelected ? ' selected' : ''}`}
+                data-testid={`${isInView ? 'visible-card' : 'hidden-card'}`}
+                onClick={onClick}>
+                <CardContent>
+                    <Typography variant="h6">Temp:</Typography>
+                    <Typography variant="body2" color="textSecondary" className='temp-value-text'>{renderTemperature(averageTemp)}</Typography>
+                    <Typography variant="h6">Date:</Typography>
+                    <Typography variant="body2" color="textSecondary">{date}</Typography>
+                </CardContent>
+            </Card>
         );
     };
 
@@ -134,8 +136,8 @@ export const WeatherInfo = ({ weatherItems }) => {
         if (active && payload && payload.length) {
             return (
                 <div className="custom-tooltip">
-                    <p className="label">{payload[0].payload.segment}</p>
-                    <p className="label">{`${payload[0].dataKey} : ${label}`}</p>
+                    <div className="title">{payload[0].payload.segment}</div>
+                    <div className="subtitle">{`${payload[0].dataKey} : ${label}`}</div>
                 </div>
             );
         }
@@ -147,35 +149,41 @@ export const WeatherInfo = ({ weatherItems }) => {
 
     return (
         <div className='weather-info-page'>
-            <div>
-                <RadioGroup row aria-label="temperature" name="temperature" value={temperatureType} onChange={handleChangeTemperatureType}>
-                    <FormControlLabel value={TemperatureTypeEnum.CELSIUS} control={<BlueRadio />} label="Celsius" />
-                    <FormControlLabel value={TemperatureTypeEnum.FAHRENHEIT} control={<BlueRadio />} label="Fahrenheit" />
+            <h3 className='home-heading'>
+                <a href='/weather-appp'>Back To Home (Reload Data)</a>
+            </h3>
+            <div className='radio-group-wrapper'>
+                <RadioGroup
+                    row
+                    aria-label="temperature"
+                    name="temperature"
+                    value={temperatureType}
+                    onChange={handleChangeTemperatureType}
+                >
+                    <FormControlLabel
+                        value={TemperatureTypeEnum.CELSIUS}
+                        control={<BlueRadio />}
+                        label="Celsius"
+                        className='radio-label' />
+                    <FormControlLabel
+                        value={TemperatureTypeEnum.FAHRENHEIT}
+                        control={<BlueRadio />}
+                        label="Fahrenheit"
+                        className='radio-label' />
                 </RadioGroup>
             </div>
-            <div>
-                {
-                    pageNum > 1 &&
-                    <ArrowRightAltIcon
-                        style={{
-                            color: blue[500],
-                            fontSize: 100,
-                            transform: 'rotate(180deg)'
-                        }}
-                        onClick={() => handleChangePageNum('left')}
-                    />
-                }
-                {
-                    pageNum < (weatherItems.length / pageSize) &&
-                    <ArrowRightAltIcon
-                        style={{
-                            color: blue[500],
-                            fontSize: 100
-                        }}
-                        data-testid="next-icon"
-                        onClick={() => handleChangePageNum('right')}
-                    />
-                }
+            <div className='arrows-wrapper'>
+                <ArrowRightAltIcon
+                    style={{ color: blue[500] }}
+                    className={`arrow${pageNum > 1 ? ' visible' : ''}`}
+                    onClick={() => handleChangePageNum('left')}
+                />
+                <ArrowRightAltIcon
+                    style={{ color: blue[500] }}
+                    className={`arrow${pageNum < (weatherItems.length / pageSize) ? ' visible' : ''}`}
+                    data-testid="next-icon"
+                    onClick={() => handleChangePageNum('right')}
+                />
             </div>
             <div>
                 <div>
@@ -191,11 +199,11 @@ export const WeatherInfo = ({ weatherItems }) => {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className='bar-chart-wrapper'>
                 <BarChart width={730} height={250} data={weatherCardSegments}>
                     <XAxis dataKey="label" />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="temp" fill="#8884d8" />
+                    <Bar dataKey="temp" fill="#2196f3" />
                 </BarChart>
             </div>
         </div>
