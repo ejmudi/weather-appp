@@ -1,0 +1,1 @@
+export const selectWeatherItems = (state) => state.weatherItems;
