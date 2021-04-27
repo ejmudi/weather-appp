@@ -1,5 +1,5 @@
 # weather-app
-A Weather App
+A Weather app written using React, Redux, Recharts and SCSS.
 
 ## Demo
 
@@ -20,3 +20,5 @@ yarn start
 yarn test
 ```
 
+## Author
+Mudiaga Ejenavi
