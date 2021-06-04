@@ -1,5 +1,6 @@
 # weather-app
 A Weather app written using React, Redux, Recharts and SCSS.
+- Shows average daily temperature of Munich.
 
 ## Demo
 
